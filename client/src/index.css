@@ -1,5 +1,5 @@
 body {
-  background: url('./img/mario.jpg');
+  background-image: url("https://images4.alphacoders.com/130/1303457.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   margin: 0;
@@ -13,4 +13,21 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@media all and (max-width: 768px) {
+  body {
+    
+    background-image: url("https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77700668941.jpg");
+
+  }
+}
+
+/* Estilos para teléfonos */
+@media all and (max-width: 480px) {
+  body {
+    background-image: url("https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77700668941.jpg");
+    height: 100%;
+    width: 100%;
+  }
 }

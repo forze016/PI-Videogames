@@ -1,11 +1,11 @@
-const express = requiere('express');
-const {apikey, Videogame, Genre, conn} = requiere('../db');
+const express = require('express');
+const {apikey, Videogame, Genre, conn} = require('../db');
 const router = express.Router();
 const axios = require('axios');
 
 router.get('/', async (req, res) => {  
     const {name} = req.query;
-    try { 
+     try { 
         if (name) {
            let sname = name.split(' ').join('-').toLowerCase()
            var apiresult = await axios.get(`https://api.rawg.io/api/games?search=${sname}&key=${apikey}&page_size=100`)
@@ -67,7 +67,7 @@ router.get('/', async (req, res) => {
             return {
                id: p.id,
                name: p.name,
-               image: "https://media.rawg.io/media/games/157/15742f2f67eacff546738e1ab5c19d20.jpg",
+               image: p.image,
                genres: b.toString(),
                rating: p.rating,
                origin: 'DB'
@@ -130,7 +130,7 @@ router.get('/', async (req, res) => {
             name: searchdbvg.name,
             platforms: searchdbvg.platform, //platform
             released: searchdbvg.reldate, //reldate
-            image: "https://media.rawg.io/media/games/157/15742f2f67eacff546738e1ab5c19d20.jpg",
+            image: searchdbvg.image,
             description: searchdbvg.description,
             rating: searchdbvg.rating,
             genres: genrestr.toString()
@@ -143,40 +143,67 @@ router.get('/', async (req, res) => {
     }
   });
 
-//Delete a videogame 
-  router.post('/delete/:name', async (req, res) => {
-  const { name } = req.params;
-  console.log('Delete de: ', name)
+// Ruta para borrar un videojuego
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
   try {
-   const elem = await Videogame.destroy({
-      where: {name: `${name}`}
-   });
+    const deletedVideogame = await Videogame.destroy({
+      where: { id },
+    });
+
+    if (deletedVideogame === 0) {
+      return res.status(404).send('Videogame not found');
+    }
+
+    res.sendStatus(204);
   } catch (error) {
-      res.send(`Error in route /videogames/delete ${error}`);
+    console.log(error);
+    res.status(500).send('Error al borrar el videojuego');
   }
-  res.send('Videogame has been deleted');
+});
+
+// Ruta para editar la información de un videojuego
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, description, reldate, rating, genre, platform } = req.body;
+
+  try {
+    await Videogame.update(
+      { name, image, description, reldate, rating, genre, platform },
+      { where: { id } }
+    );
+    res.sendStatus(204);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error al editar el videojuego');
+  }
 });
 
 //Add a videogame to the database
   router.post('/', async (req, res) => {  
-     let { name, description, reldate, rating, platform, genre} = req.body;
-     platform = platform.toString();
+     let { name, image, description, reldate, rating, genre, platform} = req.body;
+    //  platform = platform.toString();
+    console.log(req.body)
      const addVgame = await Videogame.create({
         name,
+        image,
         description,
         reldate,
         rating, 
-        platform
+        genre:[],
+        platform: platform,
      })
 
-//Find videogame genres from Genres table       
-    const vg_genre = await Genre.findAll({
-        where:{name : genre}
-    })
-    //Generate Table association Videogame-Genres link
-    addVgame.addGenre(vg_genre)
+// Encuentra los géneros correspondientes a los IDs seleccionados
+const vg_genres = await Genre.findAll({
+  where: { id: genre }
+});
 
-     res.send('New video game has been added')
+// Asocia los géneros al videojuego utilizando el método addGenres
+addVgame.addGenres(vg_genres);
+
+res.send('Nuevo videojuego ha sido agregado')
    });
 
   module.exports = router;

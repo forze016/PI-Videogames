@@ -14,6 +14,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    image:{
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     description: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -25,8 +29,11 @@ module.exports = (sequelize) => {
       type: DataTypes.DECIMAL,
     },
     platform: {
-      type: DataTypes.STRING,
-      allownull: false,
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
   });
 };

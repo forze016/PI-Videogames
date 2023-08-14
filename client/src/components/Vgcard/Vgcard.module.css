@@ -1,0 +1,120 @@
+.container {
+  position: relative;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 0;
+  height: 400px; /* Altura fija para el contenedor */
+}
+
+.closeButton {
+  position: absolute;
+  top: -10px;
+  right: 5px;
+}
+
+.delate {
+  border: none;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 2px 10px;
+}
+
+.link{
+  color: white;
+  text-decoration: none;
+  align-items: center;
+}
+
+.card {
+  background-color: #f7d794;
+  color: white;
+  align-items: center;
+  text-decoration: none;
+  font-size: 25px;
+  width: 250px;
+  flex-basis: 250px; /* Establece el ancho y alto fijo para las tarjetas */
+  margin: 10px;
+  padding: 10px;
+  border: 3px solid #5f27cd;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.card:hover {
+  transform: rotateY(10deg);
+}
+
+.card:hover .back {
+  transform: rotateY(180deg);
+}
+
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, #ff00ff, #00ffff);
+  z-index: -1;
+  transform: translateZ(-1px);
+  transition: transform 0.5s;
+}
+
+.card::before {
+  transform: rotateY(180deg);
+}
+
+.card:hover::before,
+.card:hover::after {
+  transform: rotateY(0);
+}
+
+h4,
+p {
+  margin: 2px;
+  padding: 1px;
+  text-decoration: none;
+}
+
+.imag {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  margin: 1px;
+  padding: 3px;
+  border: 2px solid black;
+  text-decoration: none;
+}
+
+/* Estilos para dispositivos móviles */
+@media all and (max-width: 768px) {
+  .container {
+    height: auto;
+  }
+
+  .card {
+    width: 100%;
+    flex-basis: 100%;
+  }
+}
+
+/* Estilos para dispositivos de pantalla pequeña */
+@media all and (max-width: 480px) {
+  .container {
+    height: auto;
+  }
+  .card {
+    font-size: 20px;
+  }
+}

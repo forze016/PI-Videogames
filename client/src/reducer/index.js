@@ -42,6 +42,7 @@ export default function rootReducer(state = initialState, action){
                 genres: genre
             }
         case GET_PLATFORMS:
+            console.log(action.payload)
               return{       
                   ...state,   
                   platforms: action.payload
